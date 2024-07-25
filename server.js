@@ -78,15 +78,13 @@ app.post('/api/signin', (req, res) => {
 
         const token = jwt.sign({ id: user.id }, 'secret-key', { expiresIn: '1h' });
 
-        res.status(200).cookie('token', token).send({auth: true, 'message': 'Token set'})
-        res.json({ message: 'Authenticated successfully' });
+        res.status(200).cookie('token', token).json({ auth: true, message: 'Authenticated successfully' });
     });
 });
 
 app.get('/api/user-details', (req, res) => {
     const token = req.cookies.token;
 
-    console.log('ici')
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -101,7 +99,6 @@ app.get('/api/user-details', (req, res) => {
                 console.error(err);
                 return res.status(500).json({ error: 'Server error' });
             }
-            console.log(results)
             if (results.length === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
